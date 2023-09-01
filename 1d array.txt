@@ -1,0 +1,35 @@
+//1d array
+#include <stdio.h>
+int main() {
+    int size, rotations, temp;
+
+    printf("Enter the size of the array: ");
+    scanf("%d", &size);
+
+    int array[size];
+
+    for (int i = 0; i < size; i++) {
+        printf("Enter the value at position %d: ", i);
+        scanf("%d", &array[i]);
+    }
+
+    printf("\nEnter the number of rotations: ");
+    scanf("%d", &rotations);
+
+    for (int i = 0; i < rotations; i++) {
+        temp = array[size - 1];
+        
+        for (int j = size - 1; j >= 0; j--) {
+            array[j] = array[j - 1];
+        }
+        
+        array[0] = temp;
+    }
+
+    printf("\nThe numbers in the array: ");
+    for (int i = 0; i < size; i++) {
+        printf(" %d ", array[i]);
+    }
+
+    return 0;
+}
