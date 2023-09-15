@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+Node* merge(Node* left, Node* right) {
+    if (!left)
+        return right;
+    if (!right)
+        return left;
+    Node* result = NULL;
+    if (left->data <= right->data) {
+        result = left;
+        result->next = merge(left->next, right);
+    } else {
+        result = right;
+        result->next = merge(left, right->next);
+    }
+    return result;
+}
+void split(Node* source, Node** firstHalf, Node** secondHalf) {
+    Node* fast;
+    Node* slow;
+    if (source == NULL || source->next == NULL) {
+        *firstHalf = source;
+        *secondHalf = NULL;
+    } else {
+        slow = source;
+        fast = source->next;
+        while (fast != NULL) {
+            fast = fast->next;
+            if (fast != NULL) {
+                slow = slow->next;
+                fast = fast->next;
+            }
+        }
+        *firstHalf = source;
+        *secondHalf = slow->next;
+        slow->next = NULL;
+    }
+}
+void mergeSort(Node** headRef) {
+    Node* head = *headRef;
+    Node* left;
+    Node* right;
+    if (head == NULL || head->next == NULL)
+        return;
+    split(head, &left, &right);
+    mergeSort(&left);
+    mergeSort(&right);
+    *headRef = merge(left, right);
+}
+void insert(Node** headRef, int newData) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = newData;
+    newNode->next = *headRef;
+    *headRef = newNode;
+}
+void printLinkedList(Node* node) {
+    while (node != NULL) {
+        printf("%d ", node->data);
+        node = node->next;
+    }
+    printf("\n");
+}
+int main() {
+    Node* head = NULL;
+    int numElements, element;
+    printf("Enter the number of elements: ");
+    scanf("%d", &numElements);
+    printf("Enter %d elements: ", numElements);
+    for (int i = 0; i < numElements; i++) {
+        scanf("%d", &element);
+        insert(&head, element);
+    }
+    printf("Unsorted list: \n");
+    printLinkedList(head);
+    mergeSort(&head);
+    printf("Sorted list: \n");
+    printLinkedList(head);
+    return 0;
+}
