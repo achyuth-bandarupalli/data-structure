@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void merge(int arr[], int left[], int left_size, int right[], int right_size) {
+    int k = 0, i = 0, j = 0;
+
+    while (i < left_size && j < right_size) {
+        if (left[i] <= right[j])
+            arr[k++] = left[i++];
+        else
+            arr[k++] = right[j++];
+    }
+
+    while (i < left_size)
+        arr[k++] = left[i++];
+
+    while (j < right_size)
+        arr[k++] = right[j++];
+}
+
+void mergeSort(int arr[], int n) {
+    if (n <= 1)
+        return;
+
+    int mid = n / 2;
+    int left[mid];
+    int right[n - mid];
+
+    for (int i = 0; i < mid; i++)
+        left[i] = arr[i];
+
+    for (int i = mid; i < n; i++)
+        right[i - mid] = arr[i];
+
+    mergeSort(left, mid);
+    mergeSort(right, n - mid);
+
+    merge(arr, left, mid, right, n - mid);
+}
+
+void mergeArrays(int* arr[], int k, int size[]) {
+    int total_elements = 0;
+
+    for (int i = 0; i < k; i++)
+        total_elements += size[i];
+
+    int merged_array[total_elements];
+    int n = 0;
+    for (int i = 0; i < k; i++) {
+        for (int j = 0; j < size[i]; j++) {
+            merged_array[n++] = arr[i][j];
+        }
+    }
+
+    printf("\nMerged array: ");
+    for (int i = 0; i < total_elements; i++) {
+        printf("%d ", merged_array[i]);
+    }
+
+    mergeSort(merged_array, total_elements);
+
+    printf("\nSorted merged array: ");
+    for (int i = 0; i < total_elements; i++) {
+        printf("%d ", merged_array[i]);
+    }
+}
+
+int main() {
+    int n, i, k, j = 0;
+    do {
+        printf("\nEnter the number of arrays: ");
+        scanf("%d", &k);
+
+        if (k <= 2)
+            printf("\nPlease enter more than 2 arrays...\n");
+        else
+            break;
+    } while (1);
+
+    int* arrays[k];
+    int sizes[k];
+
+    for (i = 0; i < k; i++) {
+        printf("\nEnter the size of the %d array: ", i + 1);
+        scanf("%d", &sizes[i]);
+
+        arrays[i] = (int*)malloc(sizeof(int) * sizes[i]);
+
+        for (j = 0; j < sizes[i]; j++) {
+            printf("Enter the %d value: ", j + 1);
+            scanf("%d", &arrays[i][j]);
+        }
+    }
+
+    for (i = 0; i < k; i++) {
+        printf("\nThe %d array: ", i + 1);
+        for (j = 0; j < sizes[i]; j++) {
+            printf("%d ", arrays[i][j]);
+        }
+    }
+    mergeArrays(arrays, k, sizes);
+    return 0;
+}
